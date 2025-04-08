@@ -8,5 +8,8 @@ namespace NodeJS {
         DB_USERNAME: string
         DB_PASSWORD: string
         DB_HOST: string
+        // secrets
+        COOKIE_SECRET: string
+        OTP_TOKEN_SECRET: string
     }
 }
