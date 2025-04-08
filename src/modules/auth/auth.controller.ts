@@ -1,8 +1,10 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, Res } from '@nestjs/common';
 import { ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { AuthDto } from './dto/auth.dto';
 import { AuthService } from './auth.service';
 import { SwaggerConsumes } from 'src/common/enums/swagger-consumes.enum';
+import { Response } from 'express';
+import { CookieKeys } from 'src/common/enums/cookie.enum';
 
 @Controller('auth')
 @ApiTags("Auth")
@@ -12,7 +14,8 @@ export class AuthController {
   ){}
   @Post("user-existence")
   @ApiConsumes(SwaggerConsumes.UrlEncoded, SwaggerConsumes.Json)
-  userExistence(@Body() authDto: AuthDto) {
-    return this.authService.userExistence(authDto)
+  async userExistence(@Body() authDto: AuthDto, @Res() res: Response) {
+    return this.authService.userExistence(authDto, res)
+    
   }
 }

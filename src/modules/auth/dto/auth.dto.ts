@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger"
-import { IsEnum, IsString, Length } from "class-validator"
+import { IsEnum, IsOptional, IsString, Length } from "class-validator"
 import { AuthType } from "../enums/type.enum"
 import { AuthMethod } from "../enums/method.enum"
 
