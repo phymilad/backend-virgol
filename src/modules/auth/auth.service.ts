@@ -1,5 +1,5 @@
-import { BadRequestException, ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
-import { AuthDto } from './dto/auth.dto';
+import { BadRequestException, ConflictException, Inject, Injectable, Scope, UnauthorizedException } from '@nestjs/common';
+import { AuthDto, CheckOtpDto } from './dto/auth.dto';
 import { AuthType } from './enums/type.enum';
 import { AuthMethod } from './enums/method.enum';
 import { isEmail, isMobilePhone, IsMobilePhone, IsPhoneNumber } from 'class-validator';
@@ -7,20 +7,22 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../user/entities/user.entity';
 import { Repository } from 'typeorm';
 import { ProfileEntity } from '../user/entities/profile.entity';
-import { AuthMessage, BadRequestMessage } from 'src/common/enums/message.enum';
+import { AuthMessage, BadRequestMessage, PublicMessage } from 'src/common/enums/message.enum';
 import { OtpEntity } from '../user/entities/otp.entity';
 import { randomInt } from 'crypto';
 import { TokenService } from './token.service';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { CookieKeys } from 'src/common/enums/cookie.enum';
 import { AuthResponse } from './types/response';
+import { REQUEST } from '@nestjs/core';
 
-@Injectable()
+@Injectable({scope: Scope.REQUEST})
 export class AuthService {
   constructor(
     @InjectRepository(UserEntity) private userRepository: Repository<UserEntity>,
     @InjectRepository(ProfileEntity) private profileRepository: Repository<ProfileEntity>,
     @InjectRepository(OtpEntity) private otpRepository: Repository<OtpEntity>,
+    @Inject(REQUEST) private request: Request,
     private tokenService: TokenService
   ){}
 
@@ -77,7 +79,7 @@ export class AuthService {
       expires: new Date(Date.now() + 1000*60*2)
     })
     res.json({
-      message: "Chane me later",
+      message: PublicMessage.OtpSentSuccessfully,
       code
     })
   }
@@ -111,8 +113,18 @@ export class AuthService {
     return user
   }
 
-  async checkOtp(code: string) {
-    
+  async checkOtp(checkOtpDto: CheckOtpDto) {
+    const token = this.request.cookies?.[CookieKeys.Otp]
+    if(!token) throw new UnauthorizedException(AuthMessage.ExpiredCode)
+    const {userId} = this.tokenService.verifyOtpToken(token)
+    const otp = await this.otpRepository.findOneBy({userId})
+    if(!otp) throw new UnauthorizedException(AuthMessage.TryAgain)
+    const now = new Date()
+    if(otp.expires < now) throw new UnauthorizedException(AuthMessage.ExpiredCode)
+    if(otp.code !== checkOtpDto.code) throw new UnauthorizedException(AuthMessage.LoginAgain)
+    return {
+      message: PublicMessage.LoginSuccessfully 
+    }
   }
 
   async saveOtp(userId: number) {
