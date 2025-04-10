@@ -16,7 +16,10 @@ export enum AuthMessage {
 }
 
 export enum NotFoundMessage {
-    
+    NotFound="Item not found",
+    NotFoundCategory="Category not found",
+    NotFoundPost="Post not found",
+    NotFoundUser="User not found",
 }
 
 export enum ValidationMessage {
@@ -27,6 +30,9 @@ export enum PublicMessage {
     LoginSuccessfully="You logged in successfully",
     OtpSentSuccessfully="Otp code is sent successfully",
     Created="Created successfully",
+    Deleted="Deleted successfully",
+    Updated="Updated successfully",
+    Inserted="Inserted successfully",
 }
 
 export enum ConflictMessage {
