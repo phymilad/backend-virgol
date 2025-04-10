@@ -26,4 +26,9 @@ export enum ValidationMessage {
 export enum PublicMessage {
     LoginSuccessfully="You logged in successfully",
     OtpSentSuccessfully="Otp code is sent successfully",
+    Created="Created successfully",
+}
+
+export enum ConflictMessage {
+    CategoryTitle="title already exists",
 }
