@@ -11,7 +11,8 @@ export enum AuthMessage {
     AlreadyExistAccount="Account with this name already exists!",
     ExpiredCode="Your code is expired",
     TryAgain="Please Try again",
-    LoginAgain="Please try to login again"
+    LoginAgain="Please try to login again",
+    LoginIsRequired="Login to your account"
 }
 
 export enum NotFoundMessage {

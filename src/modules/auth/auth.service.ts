@@ -2,7 +2,7 @@ import { BadRequestException, ConflictException, Inject, Injectable, Scope, Unau
 import { AuthDto, CheckOtpDto } from './dto/auth.dto';
 import { AuthType } from './enums/type.enum';
 import { AuthMethod } from './enums/method.enum';
-import { isEmail, isMobilePhone, IsMobilePhone, IsPhoneNumber } from 'class-validator';
+import { isEmail, isMobilePhone } from 'class-validator';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../user/entities/user.entity';
 import { Repository } from 'typeorm';
@@ -142,6 +142,13 @@ export class AuthService {
     otp = await this.otpRepository.save(otp)
     await this.userRepository.update({id: userId}, {otpId: otp.id})
     return otp
+  }
+
+  async validateAccessToken(token: string) {
+    const {userId} = this.tokenService.verifyAccessToken(token)
+    const user = await this.userRepository.findOneBy({id: userId})
+    if(!user) throw new UnauthorizedException(AuthMessage.LoginAgain)
+    return user
   }
   
 }
