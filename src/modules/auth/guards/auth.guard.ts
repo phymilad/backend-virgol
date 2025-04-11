@@ -1,7 +1,6 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
 import { isJWT } from "class-validator";
 import { Request } from "express";
-import { Observable } from "rxjs";
 import { AuthMessage } from "src/common/enums/message.enum";
 import { AuthService } from "../auth.service";
 
@@ -15,6 +14,7 @@ export class AuthGuard implements CanActivate {
         const request: Request = httpContext.getRequest<Request>()
         const token = this.extractToken(request)
         request.user = await this.authService.validateAccessToken(token)
+        console.log("request: ", request)
         return true
     }
     protected extractToken(request: Request) {

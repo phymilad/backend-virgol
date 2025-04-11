@@ -88,10 +88,10 @@ export class AuthService {
     switch (method){
       case AuthMethod.Email:
         if(isEmail(username)) return username
-        return new BadRequestException(BadRequestMessage.InvalidEmailFormat)
+        throw new BadRequestException(BadRequestMessage.InvalidEmailFormat)
       case AuthMethod.Phone:
         if(isMobilePhone(username, "fa-IR")) return username
-        return new BadRequestException(BadRequestMessage.InvalidMobileFormat)
+        throw new BadRequestException(BadRequestMessage.InvalidMobileFormat)
       case AuthMethod.Username:
         return username
       default:
@@ -122,7 +122,8 @@ export class AuthService {
     const now = new Date()
     if(otp.expires < now) throw new UnauthorizedException(AuthMessage.ExpiredCode)
     if(otp.code !== checkOtpDto.code) throw new UnauthorizedException(AuthMessage.LoginAgain)
-      const accessToken = this.tokenService.createAccessToken({userId})
+    const accessToken = this.tokenService.createAccessToken({userId})
+    console.log("accessToken: ", accessToken)
     return {
       token: accessToken,
       message: PublicMessage.LoginSuccessfully 

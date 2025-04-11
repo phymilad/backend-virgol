@@ -17,5 +17,7 @@ export class ProfileEntity extends BaseEntity {
     @Column({nullable: true})
     birthdate: Date
     @Column({nullable: true})
+    x_profile: string
+    @Column({nullable: true})
     linkedin_profile: string
 }
