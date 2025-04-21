@@ -6,7 +6,7 @@ import { Column, Entity } from "typeorm";
 export class ProfileEntity extends BaseEntity {
     @Column()
     nick_name: string
-    @Column()
+    @Column({nullable: true})
     bio: string
     @Column({nullable: true})
     image_profile: string
