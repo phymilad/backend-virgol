@@ -123,7 +123,6 @@ export class AuthService {
     if(otp.expires < now) throw new UnauthorizedException(AuthMessage.ExpiredCode)
     if(otp.code !== checkOtpDto.code) throw new UnauthorizedException(AuthMessage.LoginAgain)
     const accessToken = this.tokenService.createAccessToken({userId})
-    console.log("accessToken: ", accessToken)
     return {
       token: accessToken,
       message: PublicMessage.LoginSuccessfully 
@@ -138,15 +137,16 @@ export class AuthService {
       otp.code = code
       otp.expires = expiresIn
     } else {
-      otp = await this.otpRepository.create({code, expires: expiresIn, userId})
+      otp = this.otpRepository.create({code, expires: expiresIn, userId})
     }
     otp = await this.otpRepository.save(otp)
     await this.userRepository.update({id: userId}, {otpId: otp.id})
+    // TODO: send otp to user via sms or email
     return otp
   }
 
   async validateAccessToken(token: string) {
-    const {userId} = this.tokenService.verifyAccessToken(token)
+    const { userId } = this.tokenService.verifyAccessToken(token)
     const user = await this.userRepository.findOneBy({id: userId})
     if(!user) throw new UnauthorizedException(AuthMessage.LoginAgain)
     return user

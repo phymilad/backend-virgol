@@ -15,8 +15,7 @@ export class UserService {
         @Inject(REQUEST) private request: Request
     ){}
     async changeProfile(profileDto: ProfileDto) {
-        console.log("REQUEST: ", this.request.user)
         const user = this.request.user
-        console.log("user: ", user)
+        console.log("id: ", user?.id)
     }
 }

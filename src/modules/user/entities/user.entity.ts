@@ -20,6 +20,6 @@ export class UserEntity extends BaseEntity {
     @Column({nullable: true})
     otpId: number
     @OneToOne(() => OtpEntity,otp => otp.user, {nullable: true})
-    @JoinColumn({name: "otpId"})
+    @JoinColumn()
     otp: OtpEntity
 }
