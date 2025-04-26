@@ -64,7 +64,11 @@ export class AuthService {
     user = await this.userRepository.save(user)
     user.username = `m_${user.id}`
     user = await this.userRepository.save(user)
+    const profile = this.profileRepository.create({ userId: user.id })
+    await this.profileRepository.save(profile)
     const otp = await this.saveOtp(user.id)
+    otp.method = method
+    await this.otpRepository.save(otp)
     const token = this.tokenService.createOtpToken({userId: user.id})
     return {
       token,
@@ -123,6 +127,11 @@ export class AuthService {
     if(otp.expires < now) throw new UnauthorizedException(AuthMessage.ExpiredCode)
     if(otp.code !== checkOtpDto.code) throw new UnauthorizedException(AuthMessage.LoginAgain)
     const accessToken = this.tokenService.createAccessToken({userId})
+    if(otp.method === AuthMethod.Email) {
+      await this.userRepository.update({id: userId}, {verify_email: true})
+    } else if(otp.method === AuthMethod.Phone) {
+      await this.userRepository.update({id: userId}, {verify_phone: true})
+    }
     return {
       token: accessToken,
       message: PublicMessage.LoginSuccessfully 

@@ -89,7 +89,7 @@ export class UserService {
         if (user) {
             user.new_email = emailDto.email
             const otp = await this.authService.saveOtp(user.id)
-            const token = 
+            const token = await this.tokenService.
         }
     }
 }
