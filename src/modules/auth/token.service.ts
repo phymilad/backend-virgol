@@ -32,7 +32,7 @@ export class TokenService {
         }
     }
     createEmailToken(payload: EmailTokenPayload) {
-        const token = this.jwtService.sign(payload, { secret: process.env.EMAIL_TOKEN_SECRET, expiresIn: "1y" })
+        const token = this.jwtService.sign(payload, { secret: process.env.EMAIL_TOKEN_SECRET, expiresIn: 60*2 })
         return token
     }
     verifyEmailToken(token: string) : EmailTokenPayload {
@@ -43,7 +43,7 @@ export class TokenService {
         }
     }
     createPhoneToken(payload: PhoneTokenPayload) {
-        const token = this.jwtService.sign(payload, { secret: process.env.PHONE_TOKEN_SECRET, expiresIn: "1y" })
+        const token = this.jwtService.sign(payload, { secret: process.env.PHONE_TOKEN_SECRET, expiresIn: 60*2 })
         return token
     }
     verifyPhoneToken(token: string) : PhoneTokenPayload {
