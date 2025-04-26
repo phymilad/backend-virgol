@@ -15,6 +15,7 @@ import { Request, Response } from 'express';
 import { CookieKeys } from 'src/common/enums/cookie.enum';
 import { AuthResponse } from './types/response';
 import { REQUEST } from '@nestjs/core';
+import { cookieOptionsToken } from 'src/common/utils/cookie.util';
 
 @Injectable({scope: Scope.REQUEST})
 export class AuthService {
@@ -45,7 +46,7 @@ export class AuthService {
     this.usernameValidator(method, username)
     let user: UserEntity | null = await this.checkExistUser(method, username)
     if(!user) throw new UnauthorizedException(AuthMessage.NotFoundAccount)
-    const otp = await this.saveOtp(user.id)
+    const otp = await this.saveOtp(user.id, method)
     const token = this.tokenService.createOtpToken({userId: user.id})
     return {
       code: otp.code,
@@ -66,9 +67,7 @@ export class AuthService {
     user = await this.userRepository.save(user)
     const profile = this.profileRepository.create({ userId: user.id })
     await this.profileRepository.save(profile)
-    const otp = await this.saveOtp(user.id)
-    otp.method = method
-    await this.otpRepository.save(otp)
+    const otp = await this.saveOtp(user.id, method)
     const token = this.tokenService.createOtpToken({userId: user.id})
     return {
       token,
@@ -78,10 +77,7 @@ export class AuthService {
 
   async sendResponse(res: Response, result: AuthResponse) {
     const {token, code} = result
-    res.cookie(CookieKeys.Otp, token, {
-      httpOnly: true,
-      expires: new Date(Date.now() + 1000*60*2)
-    })
+    res.cookie(CookieKeys.Otp, token, cookieOptionsToken())
     res.json({
       message: PublicMessage.OtpSentSuccessfully,
       code
@@ -138,15 +134,16 @@ export class AuthService {
     }
   }
 
-  async saveOtp(userId: number) {
+  async saveOtp(userId: number, method: AuthMethod) {
     const code = randomInt(10000, 99999).toString()
     const expiresIn = new Date(new Date().getTime() + 1000*60*2)
     let otp = await this.otpRepository.findOneBy({userId})
     if(otp) {
       otp.code = code
       otp.expires = expiresIn
+      otp.method = method
     } else {
-      otp = this.otpRepository.create({code, expires: expiresIn, userId})
+      otp = this.otpRepository.create({code, expires: expiresIn, userId, method})
     }
     otp = await this.otpRepository.save(otp)
     await this.userRepository.update({id: userId}, {otpId: otp.id})

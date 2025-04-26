@@ -1,12 +1,15 @@
-import { Body, Controller, Get, ParseFilePipe, Put, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Patch, Post, Put, Res, UseGuards, UseInterceptors } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ProfileDto } from './dto/profile.dto';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
-import {diskStorage} from 'multer'
-import { multerDestination, multerFileName, multerStorage } from 'src/common/utils/multer.util';
+import { multerStorage } from 'src/common/utils/multer.util';
 import { ProfileImages } from './types/files';
 import { UploadedOptionalFiles } from 'src/common/decorators/uploadfile.decorator';
+import { ChangeEmailDto } from './dto/email.dto';
+import { Response } from 'express';
+import { CheckOtpDto } from '../auth/dto/auth.dto';
+import { ChangePhoneDto } from './dto/phone.dto';
 
 @UseGuards(AuthGuard)
 @Controller('user')
@@ -35,5 +38,31 @@ export class UserController {
     profile() {
         return this.userService.profile()
     }
+
+    @Patch("change-email")
+    changeEmail(@Body() emailDto: ChangeEmailDto, @Res() res: Response) {
+        return this.userService.changeEmail(res, emailDto)
+    }
+
+    @Post("verify-email-otp")
+    verifyEmailOtp(@Body() otpDto: CheckOtpDto) {
+        return this.userService.verifyEmail(otpDto.code)
+    }
+
+    @Patch("change-phone")
+    changePhone(@Body() emailDto: ChangePhoneDto, @Res() res: Response) {
+        return this.userService.changePhone(res, emailDto)
+    }
+
+    @Post("verify-phone-otp")
+    verifyPhoneOtp(@Body() otpDto: CheckOtpDto) {
+        return this.userService.verifyPhone(otpDto.code)
+    }
+
+    // @Patch("change-phone")  
+    // changePhone(emailDto: ChangePhoneDto) {
+    //     return this.userService.changePhone(emailDto)
+        
+    // }
 
 }
