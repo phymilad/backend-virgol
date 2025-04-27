@@ -19,6 +19,7 @@ import { OtpEntity } from './entities/otp.entity';
 import { AuthMessage, BadRequestMessage } from 'src/common/enums/message.enum';
 import { AuthMethod } from '../auth/enums/method.enum';
 import { ChangePhoneDto } from './dto/phone.dto';
+import { ChangeUsernameDto } from './dto/username.dto';
 
 @Injectable({scope: Scope.REQUEST})
 export class UserService {
@@ -157,6 +158,22 @@ export class UserService {
                 message: "Phone verified successfully",
             }
         }
+    }
+
+    async changeUsername(changeUsernameDto: ChangeUsernameDto) {
+        const userFromRequest = this.request.user
+        const user = await this.userRepository.findOneBy({phone: changeUsernameDto.username})
+        if (user && userFromRequest?.id && user.id !== userFromRequest.id) {
+            throw new ConflictException("Username already exists")
+        } else if(user && userFromRequest?.id && user.id === userFromRequest.id) {
+            return {
+                message: "Phone updated successfully", 
+            }
+        }
+        if (!user && userFromRequest) {
+            return await this.userRepository.update({id: userFromRequest.id}, {username: changeUsernameDto.username})
+        }
+        throw new BadRequestException("Something went wrong")
     }
 
     async checkOtp(userId: number, code: string) {

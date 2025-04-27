@@ -10,6 +10,7 @@ import { ChangeEmailDto } from './dto/email.dto';
 import { Response } from 'express';
 import { CheckOtpDto } from '../auth/dto/auth.dto';
 import { ChangePhoneDto } from './dto/phone.dto';
+import { ChangeUsernameDto } from './dto/username.dto';
 
 @UseGuards(AuthGuard)
 @Controller('user')
@@ -58,6 +59,12 @@ export class UserController {
     verifyPhoneOtp(@Body() otpDto: CheckOtpDto) {
         return this.userService.verifyPhone(otpDto.code)
     }
+
+    @Patch("change-username")
+    changeUsername(@Body() usernameDto: ChangeUsernameDto, @Res() res: Response) {
+        return this.userService.changeUsername(usernameDto)
+    }
+
 
     // @Patch("change-phone")  
     // changePhone(emailDto: ChangePhoneDto) {
