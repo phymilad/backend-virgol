@@ -3,6 +3,7 @@ import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, OneToMany, Upd
 import { BlogStatus } from "../enums/status.enum";
 import { UserEntity } from "src/modules/user/entities/user.entity";
 import { BlogLikeEntity } from "./like.entity";
+import { BlogBookmarkEntity } from "./bookmark.entity";
 
 @Entity(EntityNames.Blog)
 export class BlogEntity extends BaseEntity {
@@ -28,8 +29,12 @@ export class BlogEntity extends BaseEntity {
     @ManyToOne(() => UserEntity, (user) => user.blogs, {onDelete: 'CASCADE'})
     author: UserEntity
     
-    // Relation with LikeEntity
+    // Relation with BlogLikeEntity
     @OneToMany(() => BlogLikeEntity, (like) => like.blog)
     likes: BlogLikeEntity[]
+
+    // Relation with BlogBookmarkEntity
+    @OneToMany(() => BlogBookmarkEntity, (bookmark) => bookmark.blog)
+    bookmarks: BlogBookmarkEntity[]
 
 }
