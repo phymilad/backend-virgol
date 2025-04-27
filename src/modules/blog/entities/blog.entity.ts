@@ -1,6 +1,8 @@
 import { EntityNames } from "src/common/enums/entity.enum";
-import { BaseEntity, Column, CreateDateColumn, Entity, UpdateDateColumn } from "typeorm";
+import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, OneToMany, UpdateDateColumn } from "typeorm";
 import { BlogStatus } from "../enums/status.enum";
+import { UserEntity } from "src/modules/user/entities/user.entity";
+import { BlogLikeEntity } from "./like.entity";
 
 @Entity(EntityNames.Blog)
 export class BlogEntity extends BaseEntity {
@@ -10,14 +12,24 @@ export class BlogEntity extends BaseEntity {
     description: string;
     @Column()
     content: string;
-    @Column()
+    @Column({nullable: true})
     image: string;
     @Column({default: BlogStatus.DRAFT})
     status: BlogStatus;
-    @Column()
-    authorId: number;
+    
     @CreateDateColumn()
     created_at: Date;
     @UpdateDateColumn()
     updated_at: Date;
+
+    // Relation with UserEntity
+    @Column()
+    authorId: number;
+    @ManyToOne(() => UserEntity, (user) => user.blogs, {onDelete: 'CASCADE'})
+    author: UserEntity
+    
+    // Relation with LikeEntity
+    @OneToMany(() => BlogLikeEntity, (like) => like.blog)
+    likes: BlogLikeEntity[]
+
 }

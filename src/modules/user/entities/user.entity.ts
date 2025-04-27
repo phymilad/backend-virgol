@@ -1,9 +1,11 @@
 import { BaseEntity } from "src/common/abstracts/base.entity";
 import { EntityNames } from "src/common/enums/entity.enum";
-import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, OneToMany, OneToOne, UpdateDateColumn } from "typeorm";
 import { OtpEntity } from "./otp.entity";
 import { ProfileEntity } from "./profile.entity";
 import { AuthMethod } from "src/modules/auth/enums/method.enum";
+import { BlogEntity } from "src/modules/blog/entities/blog.entity";
+import { BlogLikeEntity } from "src/modules/blog/entities/like.entity";
 
 @Entity(EntityNames.User)
 export class UserEntity extends BaseEntity {
@@ -49,4 +51,13 @@ export class UserEntity extends BaseEntity {
     profileId: number
     @OneToOne(() => ProfileEntity, (profile) => profile.user, {nullable: true})
     profile: ProfileEntity
+
+    // Relation with Blog
+    @OneToMany(() => BlogEntity, (blog) => blog.author)
+    @JoinColumn()
+    blogs: BlogEntity[]
+
+    // Relation with BlogLike
+    @OneToMany(() => BlogLikeEntity, (blog) => blog.user)
+    blog_likes: BlogLikeEntity[]
 }
