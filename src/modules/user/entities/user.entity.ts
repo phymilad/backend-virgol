@@ -7,6 +7,7 @@ import { AuthMethod } from "src/modules/auth/enums/method.enum";
 import { BlogEntity } from "src/modules/blog/entities/blog.entity";
 import { BlogLikeEntity } from "src/modules/blog/entities/like.entity";
 import { BlogBookmarkEntity } from "src/modules/blog/entities/bookmark.entity";
+import { BlogCommentEntity } from "src/modules/blog/entities/comment.entity";
 
 @Entity(EntityNames.User)
 export class UserEntity extends BaseEntity {
@@ -65,4 +66,8 @@ export class UserEntity extends BaseEntity {
     // Relation with BlogBookmarkEntity
     @OneToMany(() => BlogBookmarkEntity, (bookmark) => bookmark.user)
     blog_bookmarks: BlogBookmarkEntity[]
+
+    // Relation with BlogCommentEntity
+    @OneToMany(() => BlogCommentEntity, (comment) => comment.blog)
+    blog_comments: BlogCommentEntity[]
 }

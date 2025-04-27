@@ -4,6 +4,7 @@ import { BlogStatus } from "../enums/status.enum";
 import { UserEntity } from "src/modules/user/entities/user.entity";
 import { BlogLikeEntity } from "./like.entity";
 import { BlogBookmarkEntity } from "./bookmark.entity";
+import { BlogCommentEntity } from "./comment.entity";
 
 @Entity(EntityNames.Blog)
 export class BlogEntity extends BaseEntity {
@@ -36,5 +37,9 @@ export class BlogEntity extends BaseEntity {
     // Relation with BlogBookmarkEntity
     @OneToMany(() => BlogBookmarkEntity, (bookmark) => bookmark.blog)
     bookmarks: BlogBookmarkEntity[]
+
+    // Relation with BlogCommentEntity
+    @OneToMany(() => BlogCommentEntity, (comment) => comment.blog)
+    comments: BlogCommentEntity[]
 
 }
