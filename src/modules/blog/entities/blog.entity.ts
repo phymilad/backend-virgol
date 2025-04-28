@@ -1,10 +1,11 @@
 import { EntityNames } from "src/common/enums/entity.enum";
-import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, OneToMany, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, UpdateDateColumn } from "typeorm";
 import { BlogStatus } from "../enums/status.enum";
 import { UserEntity } from "src/modules/user/entities/user.entity";
 import { BlogLikeEntity } from "./like.entity";
 import { BlogBookmarkEntity } from "./bookmark.entity";
 import { BlogCommentEntity } from "./comment.entity";
+import { BaseEntity } from "src/common/abstracts/base.entity";
 
 @Entity(EntityNames.Blog)
 export class BlogEntity extends BaseEntity {

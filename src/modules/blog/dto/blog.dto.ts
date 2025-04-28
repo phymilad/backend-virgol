@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional, IsString, Length } from "class-validator";
+import { IsNotEmpty, IsNumberString, IsOptional, IsString, Length } from "class-validator";
 
 export class CreateBlogDto {
     @IsString()
@@ -10,7 +10,7 @@ export class CreateBlogDto {
     @IsOptional()
     slug: string
 
-    @IsString()
+    @IsNumberString()
     @IsNotEmpty()
     time_for_study: string
 
@@ -25,6 +25,7 @@ export class CreateBlogDto {
     content: string
 
     @IsString()
+    @IsOptional()
     image: string
 
 }

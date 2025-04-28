@@ -1,7 +1,8 @@
 import { EntityNames } from "src/common/enums/entity.enum";
-import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
 import { BlogEntity } from "./blog.entity";
 import { UserEntity } from "src/modules/user/entities/user.entity";
+import { BaseEntity } from "src/common/abstracts/base.entity";
 
 @Entity(EntityNames.BlogComment)
 export class BlogCommentEntity extends BaseEntity {
