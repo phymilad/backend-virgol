@@ -5,9 +5,9 @@ import { OtpEntity } from "./otp.entity";
 import { ProfileEntity } from "./profile.entity";
 import { AuthMethod } from "src/modules/auth/enums/method.enum";
 import { BlogEntity } from "src/modules/blog/entities/blog.entity";
-import { BlogLikeEntity } from "src/modules/blog/entities/like.entity";
-import { BlogBookmarkEntity } from "src/modules/blog/entities/bookmark.entity";
-import { BlogCommentEntity } from "src/modules/blog/entities/comment.entity";
+import { BlogLikeEntity } from "src/modules/blog/entities/blog-like.entity";
+import { BlogBookmarkEntity } from "src/modules/blog/entities/blog-bookmark.entity";
+import { BlogCommentEntity } from "src/modules/blog/entities/blog-comment.entity";
 
 @Entity(EntityNames.User)
 export class UserEntity extends BaseEntity {
