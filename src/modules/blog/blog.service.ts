@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { BlogEntity } from './entities/blog.entity';
 import { Repository } from 'typeorm';
 import { CreateBlogDto } from './dto/blog.dto';
-import { createSlug } from 'src/common/utils/functions.util';
+import { createSlug, randomId } from 'src/common/utils/functions.util';
 import { REQUEST } from '@nestjs/core';
 import { Request } from 'express';
 import { BlogStatus } from './enums/status.enum';
@@ -22,14 +22,11 @@ export class BlogService {
         let { title, slug, content, description, image, time_for_study } = createBlogDto;
         slug = createSlug(!!slug ? slug : title)
 
-        const blogExists = await this.blogRepository.findOne({where: {slug}});
-        if(blogExists) {
-            throw new BadRequestException("Blog with this slug already exists");
-        }
+        const doesExist = await this.findBlogBySlug(slug)
 
         const blog = this.blogRepository.create({
             title,
-            slug,
+            slug: doesExist ? `${slug}-${randomId()}` : slug,
             content,
             description,
             image,
@@ -42,4 +39,10 @@ export class BlogService {
             message: "Blog created successfully",
         }
     }
+
+    async findBlogBySlug(slug: string) {
+        const blog = await this.blogRepository.findOne({where: {slug}})
+        return !!blog
+    }
+
 }

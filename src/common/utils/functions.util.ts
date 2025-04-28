@@ -11,3 +11,5 @@ export function removeSlashPublicFromPath(path: string): string {
 export const createSlug = (str: string): string => {
     return str.replace(/[<>ءأإؤۀَُُِّـ«»:"ًٌٍ،؛,!@#$%^&*)(__)]/g, '').replace(/[\s]+/g, '-')
 }
+
+export const randomId = () => Math.random().toString(36).slice(2, 10)
