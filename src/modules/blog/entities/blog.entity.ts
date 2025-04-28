@@ -10,14 +10,24 @@ import { BlogCommentEntity } from "./comment.entity";
 export class BlogEntity extends BaseEntity {
     @Column()
     title: string;
+    
     @Column()
     description: string;
+    
     @Column()
     content: string;
+    
     @Column({nullable: true})
     image: string;
+    
     @Column({default: BlogStatus.DRAFT})
     status: BlogStatus;
+    
+    @Column({unique: true})
+    slug: string;
+
+    @Column()
+    time_for_study: string;
     
     @CreateDateColumn()
     created_at: Date;
