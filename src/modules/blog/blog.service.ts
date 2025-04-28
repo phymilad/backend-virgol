@@ -7,6 +7,8 @@ import { createSlug, randomId } from 'src/common/utils/functions.util';
 import { REQUEST } from '@nestjs/core';
 import { Request } from 'express';
 import { BlogStatus } from './enums/status.enum';
+import { PaginationDto } from 'src/common/dtos/pagination.dto';
+import { paginationGenerator, paginationSolver } from 'src/common/utils/pagination.util';
 
 @Injectable({scope: Scope.REQUEST})
 export class BlogService {
@@ -43,6 +45,15 @@ export class BlogService {
     async findBlogBySlug(slug: string) {
         const blog = await this.blogRepository.findOne({where: {slug}})
         return !!blog
+    }
+
+    async getBlogs(paginationDto: PaginationDto) {
+        const { page, limit, skip } = paginationSolver(paginationDto);
+        const [blogs, count] = await this.blogRepository.findAndCount({where: {}, order: {created_at: "DESC"}, skip, take: limit})
+        return {
+            pagination: paginationGenerator(count, page, limit),
+            blogs
+        }
     }
 
     async getUserBlogs() {

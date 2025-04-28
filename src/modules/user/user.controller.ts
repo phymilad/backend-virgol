@@ -5,7 +5,7 @@ import { AuthGuard } from '../auth/guards/auth.guard';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { multerStorage } from 'src/common/utils/multer.util';
 import { ProfileImages } from './types/files';
-import { UploadedOptionalFiles } from 'src/common/decorators/uploadfile.decorator';
+import { UploadedOptionalFiles } from 'src/common/decorators/upload-file.decorator';
 import { ChangeEmailDto } from './dto/email.dto';
 import { Response } from 'express';
 import { CheckOtpDto } from '../auth/dto/auth.dto';

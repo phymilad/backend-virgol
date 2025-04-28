@@ -1,7 +1,9 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import { BlogService } from './blog.service';
 import { CreateBlogDto } from './dto/blog.dto';
 import { AuthGuard } from '../auth/guards/auth.guard';
+import { PaginationDto } from 'src/common/dtos/pagination.dto';
+import { SkipAuth } from 'src/common/decorators/skip-auth.decorator';
 
 @Controller('blog')
 @UseGuards(AuthGuard)
@@ -16,5 +18,11 @@ export class BlogController {
   @Get("/user-blogs")
   getUserBlogs() {
     return this.blogService.getUserBlogs();
+  }
+
+  @Get("/")
+  @SkipAuth()
+  getBlogs(@Query() PaginationDto: PaginationDto) {
+    return this.blogService.getBlogs(PaginationDto);
   }
 }
