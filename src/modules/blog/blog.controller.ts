@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { BlogService } from './blog.service';
 import { CreateBlogDto } from './dto/blog.dto';
 import { AuthGuard } from '../auth/guards/auth.guard';
@@ -11,5 +11,10 @@ export class BlogController {
   @Post("/")
   createBlogDto(@Body() createBlogDto: CreateBlogDto) {
     return this.blogService.createBlog(createBlogDto);
-  } 
+  }
+
+  @Get("/")
+  getUserBlogs() {
+    return this.blogService.getUserBlogs();
+  }
 }

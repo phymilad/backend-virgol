@@ -45,4 +45,13 @@ export class BlogService {
         return !!blog
     }
 
+    async getUserBlogs() {
+        const user = this.request.user;
+        if(!user) {
+            throw new UnauthorizedException("Login again");
+        }
+        const blogs = await this.blogRepository.find({where: {authorId: user.id}, order: {created_at: "DESC"}})
+        return blogs
+    }
+
 }
