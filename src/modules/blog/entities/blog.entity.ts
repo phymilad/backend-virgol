@@ -2,10 +2,11 @@ import { EntityNames } from "src/common/enums/entity.enum";
 import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, UpdateDateColumn } from "typeorm";
 import { BlogStatus } from "../enums/status.enum";
 import { UserEntity } from "src/modules/user/entities/user.entity";
-import { BlogLikeEntity } from "./like.entity";
-import { BlogBookmarkEntity } from "./bookmark.entity";
-import { BlogCommentEntity } from "./comment.entity";
+import { BlogLikeEntity } from "./blog-like.entity";
+import { BlogBookmarkEntity } from "./blog-bookmark.entity";
+import { BlogCommentEntity } from "./blog-comment.entity";
 import { BaseEntity } from "src/common/abstracts/base.entity";
+import { BlogCategoryEntity } from "./blog-category.entity";
 
 @Entity(EntityNames.Blog)
 export class BlogEntity extends BaseEntity {
@@ -40,7 +41,7 @@ export class BlogEntity extends BaseEntity {
     authorId: number;
     @ManyToOne(() => UserEntity, (user) => user.blogs, {onDelete: 'CASCADE'})
     author: UserEntity
-    
+
     // Relation with BlogLikeEntity
     @OneToMany(() => BlogLikeEntity, (like) => like.blog)
     likes: BlogLikeEntity[]
@@ -52,5 +53,9 @@ export class BlogEntity extends BaseEntity {
     // Relation with BlogCommentEntity
     @OneToMany(() => BlogCommentEntity, (comment) => comment.blog)
     comments: BlogCommentEntity[]
+
+    // Relation with BlogCategoryEntity
+    @OneToMany(() => BlogCategoryEntity, (category) => category.blog)
+    categories: BlogCategoryEntity[]
 
 }
