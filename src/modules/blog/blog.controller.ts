@@ -13,7 +13,7 @@ export class BlogController {
     return this.blogService.createBlog(createBlogDto);
   }
 
-  @Get("/")
+  @Get("/user-blogs")
   getUserBlogs() {
     return this.blogService.getUserBlogs();
   }
